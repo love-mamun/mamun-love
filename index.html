@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> Last Seen Countdown</title>
+<style>
+  :root {
+    --primary-color: #8e44ad;
+    --secondary-color: #9b59b6;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --accent-color: #e74c3c;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --text-dark: #2c3e50;
+    --text-light: #ecf0f1;
+  }
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Hind Siliguri', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--dark-color), #34495e);
+    color: var(--light-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    transition: all 0.5s ease;
+    overflow-x: hidden;
+  }
+  
+  body.light {
+    background: linear-gradient(135deg, #f5f7fa, #dfe6e9);
+    color: var(--text-dark);
+  }
+  
+  .container {
+    background: rgba(44, 62, 80, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: 25px;
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    animation: fadeInUp 0.8s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(142, 68, 173, 0.1) 0%, transparent 70%);
+    z-index: -1;
+    animation: rotate 20s linear infinite;
+  }
+  
+  body.light .container {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+    font-size: 2.2rem;
+    color: var(--secondary-color);
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    display: inline-block;
+  }
+  
+  h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--accent-color);
+    border-radius: 3px;
+  }
+  
+  body.light h1 {
+    color: var(--primary-color);
+  }
+  
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    font-weight: 500;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+  
+  .counter {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 40px 0;
+    letter-spacing: 1px;
+    color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .counter:hover {
+    transform: translateY(-3px);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  body.light .counter {
+    color: var(--danger-color);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  button {
+    background: var(--primary-color);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    color: var(--light-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+  
+  button:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+  }
+  
+  button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  button:active {
+    transform: translateY(1px);
+  }
+  
+  #themeToggle {
+    background: var(--warning-color);
+    color: var(--text-dark);
+  }
+  
+  #notifyBtn {
+    background: var(--success-color);
+  }
+  
+  #resetBtn {
+    background: var(--danger-color);
+  }
+  
+  .notification-info {
+    margin-top: 25px;
+    font-size: 1rem;
+    opacity: 0.9;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  body.light .notification-info {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .floating-icons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-icon {
+    position: absolute;
+    opacity: 0.1;
+    z-index: -1;
+    color: var(--secondary-color);
+  }
+  
+  body.light .floating-icon {
+    color: var(--primary-color);
+  }
+  
+  .icon-1 {
+    top: 10%;
+    left: 10%;
+    font-size: 120px;
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .icon-2 {
+    bottom: 15%;
+    right: 10%;
+    font-size: 150px;
+    animation: float 10s ease-in-out infinite 2s;
+  }
+  
+  .icon-3 {
+    top: 60%;
+    left: 20%;
+    font-size: 80px;
+    animation: float 7s ease-in-out infinite 1s;
+  }
+  
+  .icon-4 {
+    top: 20%;
+    right: 20%;
+    font-size: 100px;
+    animation: float 9s ease-in-out infinite 3s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-30px) rotate(5deg);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 1;
+    }
+    20% {
+      transform: scale(25, 25);
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(40, 40);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 30px;
+      border-radius: 20px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+    }
+    
+    p {
+      font-size: 1.1rem;
+    }
+    
+    .counter {
+      font-size: 2rem;
+      padding: 20px;
+      margin: 30px 0;
+    }
+    
+    button {
+      padding: 12px 25px;
+      min-width: 160px;
+      font-size: 1rem;
+    }
+    
+    .floating-icon {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding: 25px 20px;
+    }
+    
+    h1 {
+      font-size: 1.6rem;
+    }
+    
+    .counter {
+      font-size: 1.6rem;
+      padding: 15px;
+    }
+    
+    .btn-container {
+      gap: 10px;
+    }
+    
+    button {
+      width: 100%;
+    }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fas fa-heart"></i> তার সাথে লাস্ট দেখা</h1>
+    <p><strong>১৭ মে ২০২৫, সকাল ১১:৫৬:৪৩</strong></p>
+    <div class="counter" id="counter">
+      <div class="counter-inner" id="counterInner">লোড হচ্ছে...</div>
+    </div>
+    <div class="btn-container">
+      <button id="themeToggle"><i class="fas fa-moon"></i> &nbsp; ডার্ক মোড</button>
+      <button id="notifyBtn"><i class="fas fa-bell"></i> &nbsp; নোটিফিকেশন</button>
+      <button id="resetBtn"><i class="fas fa-redo"></i> &nbsp; রিসেট করুন</button>
+    </div>
+    <div class="notification-info" id="notificationInfo"></div>
+  </div>
+
+  <div class="floating-icons">
+    <i class="fas fa-heart floating-icon icon-1"></i>
+    <i class="fas fa-clock floating-icon icon-2"></i>
+    <i class="fas fa-star floating-icon icon-3"></i>
+    <i class="fas fa-calendar-alt floating-icon icon-4"></i>
+  </div>
+
+  <script>
+    const counter = document.getElementById('counter');
+    const counterInner = document.getElementById('counterInner');
+    const themeToggle = document.getElementById('themeToggle');
+    const notifyBtn = document.getElementById('notifyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const notificationInfo = document.getElementById('notificationInfo');
+
+    const defaultDate = new Date("2025-05-17T11:56:43");
+    let targetDate = new Date(defaultDate);
+    let isDark = true;
+
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.add('light');
+      themeToggle.innerHTML = '<i class="fas fa-sun"></i> &nbsp; লাইট মোড';
+      isDark = false;
+    }
+
+    function updateCounter() {
+      const now = new Date();
+      let diff = now - targetDate;
+
+      if (diff < 0) {
+        counterInner.innerHTML = `
+          <div style="font-size: 1.5rem; color: var(--success-color);">
+            টার্গেট সময় এখনও আসেনি
+          </div>
+        `;
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      counterInner.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+          <div class="time-unit">
+            <div style="font-size: 2rem; font-weight: 800; line-height: 1.2;">${days}</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">দিন</div>
+          </div>
+          <div class="time-unit">
+            <div style="font-size: 2rem; font-weight: 800; line-height: 1.2;">${hours}</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">ঘণ্টা</div>
+          </div>
+          <div class="time-unit">
+            <div style="font-size: 2rem; font-weight: 800; line-height: 1.2;">${minutes}</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">মিনিট</div>
+          </div>
+          <div class="time-unit">
+            <div style="font-size: 2rem; font-weight: 800; line-height: 1.2;">${seconds}</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">সেকেন্ড</div>
+          </div>
+        </div>
+      `;
+    }
+
+    themeToggle.addEventListener('click', () => {
+      isDark = !isDark;
+      if (isDark) {
+        document.body.classList.remove('light');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i> &nbsp; 🌙 ডার্ক মোড';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.add('light');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i> &nbsp; ☀️ লাইট মোড';
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    notifyBtn.addEventListener('click', () => {
+      if (!('Notification' in window)) {
+        showNotificationMessage('এই ব্রাউজার নোটিফিকেশন সাপোর্ট করে না।', 'error');
+        return;
+      }
+
+      if (Notification.permission === 'granted') {
+        sendNotification();
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            sendNotification();
+          } else {
+            showNotificationMessage('নোটিফিকেশন অনুমতি দেয়া হয়নি।', 'error');
+          }
+        });
+      } else {
+        showNotificationMessage('আপনি আগে থেকেই নোটিফিকেশন বন্ধ করে রেখেছেন।', 'error');
+      }
+    });
+
+    function sendNotification() {
+      const now = new Date();
+      let diff = now - targetDate;
+
+      if (diff < 0) {
+        showNotificationMessage('টার্গেট সময় এখনও আসেনি।', 'info');
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+      new Notification('ক্র্যাশ লাস্ট দেখা সময়', {
+        body: `${days} দিন, ${hours} ঘণ্টা, ${minutes} মিনিট হয়ে গেছে।`,
+        icon: 'https://cdn-icons-png.flaticon.com/512/3208/3208717.png'
+      });
+
+      showNotificationMessage('নোটিফিকেশন পাঠানো হয়েছে!', 'success');
+    }
+
+    function showNotificationMessage(message, type) {
+      let icon = '';
+      let bgColor = '';
+      
+      switch(type) {
+        case 'success':
+          icon = '<i class="fas fa-check-circle"></i>';
+          bgColor = 'rgba(46, 204, 113, 0.2)';
+          break;
+        case 'error':
+          icon = '<i class="fas fa-exclamation-circle"></i>';
+          bgColor = 'rgba(231, 76, 60, 0.2)';
+          break;
+        case 'info':
+          icon = '<i class="fas fa-info-circle"></i>';
+          bgColor = 'rgba(52, 152, 219, 0.2)';
+          break;
+        default:
+          icon = '<i class="fas fa-bell"></i>';
+      }
+      
+      notificationInfo.innerHTML = `${icon} ${message}`;
+      notificationInfo.style.background = bgColor;
+      
+      setTimeout(() => { 
+        notificationInfo.textContent = '';
+        notificationInfo.style.background = '';
+      }, 3500);
+    }
+
+    resetBtn.addEventListener('click', () => {
+      targetDate = new Date(defaultDate);
+      showNotificationMessage('টাইমার রিসেট করা হয়েছে!', 'success');
+    });
+
+    // Initial update
+    updateCounter();
+    // Update every second
+    setInterval(updateCounter, 1000);
+  </script>
+</body>
+</html>
