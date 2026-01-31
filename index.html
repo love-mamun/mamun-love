@@ -1,278 +1,264 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Fall in Love 🌺😘</title>
-<style>
-  :root {
-    --primary-color: #8e44ad;
-    --secondary-color: #9b59b6;
-    --dark-color: #2c3e50;
-    --light-color: #ecf0f1;
-    --accent-color: #e74c3c;
-    --success-color: #2ecc71;
-    --warning-color: #f39c12;
-    --danger-color: #e74c3c;
-    --text-dark: #2c3e50;
-    --text-light: #ecf0f1;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Hind Siliguri', 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, var(--dark-color), #34495e);
-    color: var(--light-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  body.light {
-    background: linear-gradient(135deg, #f5f7fa, #dfe6e9);
-    color: var(--text-dark);
-  }
-
-  .container {
-    background: rgba(44, 62, 80, 0.9);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 40px;
-    border-radius: 25px;
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.15);
-    animation: fadeInUp 0.8s ease;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
-
-  .container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(142,68,173,0.1) 0%, transparent 70%);
-    z-index: -1;
-    animation: rotate 20s linear infinite;
-  }
-
-  h1 {
-    margin-bottom: 20px;
-    font-size: 2.2rem;
-    color: var(--secondary-color);
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    position: relative;
-    display: inline-block;
-  }
-
-  h1::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background: var(--accent-color);
-    border-radius: 3px;
-  }
-
-  body.light h1 { color: var(--primary-color); }
-
-  p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
-    font-weight: 500;
-    line-height: 1.6;
-    opacity: 0.9;
-  }
-
-  .counter {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 40px 0;
-    letter-spacing: 1px;
-    color: var(--accent-color);
-    background: rgba(0,0,0,0.25);
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
-  }
-
-  .counter:hover {
-    transform: translateY(-3px);
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.3);
-  }
-
-  body.light .counter {
-    color: var(--danger-color);
-    background: rgba(255,255,255,0.6);
-  }
-
-  .btn-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 30px;
-  }
-
-  button {
-    background: var(--primary-color);
-    border: none;
-    padding: 15px 30px;
-    border-radius: 50px;
-    color: var(--light-color);
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 200px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-
-  #themeToggle { background: var(--warning-color); color: var(--text-dark);}
-  #notifyBtn { background: var(--success-color);}
-  #resetBtn { background: var(--danger-color);}
-
-  .notification-info {
-    margin-top: 25px;
-    font-size: 1rem;
-    opacity: 0.9;
-    padding: 15px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
-  }
-
-  body.light .notification-info { background: rgba(0,0,0,0.05); }
-
-  /* Floating Hearts */
-  .heart {
-    position: absolute;
-    color: rgba(255,0,0,0.2);
-    font-size: 20px;
-    user-select: none;
-    animation: floatHeart linear infinite;
-  }
-
-  @keyframes floatHeart {
-    0% { transform: translateY(100vh) translateX(0) scale(0.5); opacity: 0;}
-    10% { opacity: 0.5;}
-    50% { opacity: 1;}
-    100% { transform: translateY(-10vh) translateX(50px) scale(1); opacity: 0;}
-  }
-
-  @keyframes fadeInUp { from {opacity:0; transform: translateY(30px);} to {opacity:1; transform:translateY(0);} }
-  @keyframes rotate { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-
-</style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>初恋倒计时</title>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-
-<body>
-  <div class="container">
-    <h1><i class="fas fa-heart"></i> 初次恋爱</h1>
-    <p><strong>2027年1月20日, 早上 11:59:59</strong></p>
-    <div class="counter" id="counter">
-      <div class="counter-inner" id="counterInner">加载中...</div>
-    </div>
-    <div class="btn-container">
-      <button id="themeToggle"><i class="fas fa-moon"></i> &nbsp; 暗黑模式</button>
-      <button id="notifyBtn"><i class="fas fa-bell"></i> &nbsp; 通知</button>
-      <button id="resetBtn"><i class="fas fa-redo"></i> &nbsp; 重置</button>
-    </div>
-    <div class="notification-info" id="notificationInfo"></div>
-  </div>
-
-  <div id="heartsContainer"></div>
-
-<script>
-const counterInner = document.getElementById('counterInner');
-const themeToggle = document.getElementById('themeToggle');
-const notifyBtn = document.getElementById('notifyBtn');
-const resetBtn = document.getElementById('resetBtn');
-const notificationInfo = document.getElementById('notificationInfo');
-
-const defaultDate = new Date("2027-01-20T11:56:43");
-let targetDate = new Date(defaultDate);
-let isDark = true;
-
-function updateCounter() {
-  const now = new Date();
-  let diff = now - targetDate;
-
-  if(diff<0){
-    counterInner.innerHTML = "目标时间未到";
-    return;
-  }
-
-  const days = Math.floor(diff / (1000*60*60*24));
-  const hours = Math.floor((diff / (1000*60*60))%24);
-  const minutes = Math.floor((diff / (1000*60))%60);
-  const seconds = Math.floor((diff /1000)%60);
-
-  counterInner.innerHTML = `${days} 天 ${hours} 小时 ${minutes} 分 ${seconds} 秒`;
+<style>
+:root {
+  --primary-color: #8e44ad;
+  --secondary-color: #9b59b6;
+  --dark-color: #2c3e50;
+  --light-color: #ecf0f1;
+  --accent-color: #e74c3c;
+  --success-color: #2ecc71;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --text-dark: #2c3e50;
+  --text-light: #ecf0f1;
 }
 
-// Theme toggle
-themeToggle.onclick = () => {
-  isDark = !isDark;
-  document.body.classList.toggle('light');
-};
+* {box-sizing: border-box; margin: 0; padding: 0;}
 
-// Notification
-notifyBtn.onclick = () => {
-  if(Notification.permission === 'granted'){
-    new Notification('初次恋爱时间', { body: counterInner.innerText });
-  } else { Notification.requestPermission(); }
-};
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background: linear-gradient(135deg, var(--dark-color), #34495e);
+  color: var(--light-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  transition: all 0.5s ease;
+  overflow-x: hidden;
+}
 
-// Reset
-resetBtn.onclick = () => {
-  targetDate = new Date(defaultDate);
-  notificationInfo.innerText = "计时器已重置!";
-};
+body.light {
+  background: linear-gradient(135deg, #f5f7fa, #dfe6e9);
+  color: var(--text-dark);
+}
 
+.container {
+  background: rgba(255,255,255,0.95);
+  border-radius: 25px;
+  padding: 40px 25px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+h1 i {color: var(--accent-color);}
+
+p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.counter {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 10px;
+  background: rgba(0,0,0,0.05);
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+}
+
+.counter div {
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.counter div span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #555;
+  margin-top: 5px;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+button {
+  border: none;
+  padding: 12px 0;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+#themeToggle {background: var(--warning-color);}
+#notifyBtn {background: var(--success-color);}
+#resetBtn {background: var(--danger-color);}
+
+.notification-info {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #333;
+  padding: 10px;
+  border-radius: 12px;
+  display: none;
+}
+
+/* Vibrant floating hearts */
+.heart {
+  position: absolute;
+  color: rgba(255,0,0,0.4);
+  font-size: 20px;
+  animation: floatHeart linear infinite;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 0 0 5px rgba(255,0,0,0.6);
+}
+
+@keyframes floatHeart {
+  0% { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0;}
+  25% { opacity: 1; transform: rotate(45deg) scale(1);}
+  50% { transform: translateY(50vh) rotate(90deg) scale(1.2);}
+  75% { transform: translateY(25vh) rotate(135deg) scale(1);}
+  100% { transform: translateY(-10%) rotate(360deg) scale(0.5); opacity: 0;}
+}
+
+@media (max-width:480px){
+  .container {padding: 30px 15px;}
+  h1 {font-size: 1.6rem;}
+  .counter {padding: 15px;}
+  button {font-size: 0.95rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1><i class="fas fa-heart"></i> 初次恋爱</h1>
+  <p><strong>2026年1月20日, 上午11:59:59</strong></p>
+
+  <div class="counter" id="counter">
+    <div><span id="days">--</span> 天</div>
+    <div><span id="hours">--</span> 小时</div>
+    <div><span id="minutes">--</span> 分钟</div>
+    <div><span id="seconds">--</span> 秒</div>
+  </div>
+
+  <div class="btn-container">
+    <button id="themeToggle"><i class="fas fa-moon"></i> 深色模式</button>
+    <button id="notifyBtn"><i class="fas fa-bell"></i> 通知</button>
+    <button id="resetBtn"><i class="fas fa-redo"></i> 重置</button>
+  </div>
+
+  <div class="notification-info" id="notificationInfo"></div>
+</div>
+
+<div id="heartsContainer"></div>
+
+<script>
+const targetDate = new Date("2026-01-20T11:59:59");
+
+function updateCounter(){
+  const now = new Date();
+  const diff = now - targetDate;
+  if(diff<0){ return; }
+
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor((diff/(1000*60*60))%24);
+  const minutes = Math.floor((diff/(1000*60))%60);
+  const seconds = Math.floor((diff/1000)%60);
+
+  document.getElementById('days').innerText = days;
+  document.getElementById('hours').innerText = hours;
+  document.getElementById('minutes').innerText = minutes;
+  document.getElementById('seconds').innerText = seconds;
+}
+setInterval(updateCounter, 1000);
 updateCounter();
-setInterval(updateCounter,1000);
 
-// Floating Hearts
+// Vibrant floating hearts
 const heartsContainer = document.getElementById('heartsContainer');
 function createHeart(){
   const heart = document.createElement('div');
   heart.classList.add('heart');
-  heart.innerHTML='💞';
+  heart.innerHTML = '💗';
   heart.style.left = Math.random()*100 + 'vw';
-  heart.style.animationDuration = (5+Math.random()*5)+'s';
-  heart.style.fontSize = (10+Math.random()*30)+'px';
+  heart.style.fontSize = (15+Math.random()*30)+'px';
+  heart.style.animationDuration = (4+Math.random()*6)+'s';
   heartsContainer.appendChild(heart);
   setTimeout(()=>heart.remove(),10000);
 }
-setInterval(createHeart,500);
+setInterval(createHeart, 400);
 
+// Theme toggle
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click',()=>{
+  document.body.classList.toggle('light');
+  if(document.body.classList.contains('light')){
+    themeToggle.innerHTML = '<i class="fas fa-sun"></i> 浅色模式';
+  }else{
+    themeToggle.innerHTML = '<i class="fas fa-moon"></i> 深色模式';
+  }
+});
+
+// Notification button
+const notifyBtn = document.getElementById('notifyBtn');
+const notificationInfo = document.getElementById('notificationInfo');
+notifyBtn.addEventListener('click',()=>{
+  if(!("Notification" in window)){alert("此浏览器不支持通知"); return;}
+  if(Notification.permission==="granted"){sendNotification();}
+  else if(Notification.permission!=="denied"){Notification.requestPermission().then(p=>{if(p==="granted") sendNotification();})}
+});
+function sendNotification(){
+  const now = new Date();
+  const diff = now - targetDate;
+  const days = Math.floor(diff/(1000*60*60*24));
+  const hours = Math.floor((diff/(1000*60*60))%24);
+  const minutes = Math.floor((diff/(1000*60))%60);
+
+  new Notification('初恋倒计时',{
+    body: `${days} 天, ${hours} 小时, ${minutes} 分钟 已经过去`,
+    icon: 'https://cdn-icons-png.flaticon.com/512/3208/3208717.png'
+  });
+  notificationInfo.style.display='block';
+  notificationInfo.innerText='通知已发送!';
+  setTimeout(()=>{notificationInfo.style.display='none';},3000);
+}
+
+// Reset button
+const resetBtn = document.getElementById('resetBtn');
+resetBtn.addEventListener('click',()=>{updateCounter(); notificationInfo.style.display='block'; notificationInfo.innerText='计时器已重置!'; setTimeout(()=>{notificationInfo.style.display='none';},3000);});
 </script>
+
 </body>
 </html>
